@@ -8,7 +8,7 @@ use warnings;
 
 # User defined total number of mixed Mus/Bacterial sequences and their ratio
 use constant mixedseq_count => 5000; 
-use constant ratio_mb => 0.8;
+use constant ratio_mb => 0.8; # Mus:Bacterial = 0.8
 
 
 # get the respective Mus and Bacterial directories and output file name from command line 
@@ -29,15 +29,15 @@ my @bfiles = odir ($bdirname);
 # open all beginning with mm_alt_Mm_Celera_*.fa for the Mus directory
 # open all beginning with SRR*.fasta for the Bacterial directory
 
-my $mus_matcher = qr/^mm_alt_Mm_Celera_(\S+).fa$/;
+my $mus_matcher = qr/^mm_alt_Mm_Celera_(\S+).fa$/; # such as mm_alt_Mm_Celera_chr1.fa and mm_alt_Mm_Celera_unplaced.fa
 my $mus_dir = $mdirname;
-my $mus_count = int(mixedseq_count * ratio_mb/22); #total 22 files for Mus directory
+my $mus_count = int(mixedseq_count * ratio_mb/22); #total 22 files in the Mus directory
 my $mOUT = seqfetch($mus_count,$mus_matcher, $mus_dir, @mfiles);
 
 
-my $bac_matcher = qr/^SRR(\d+).fasta$/;
+my $bac_matcher = qr/^SRR(\d+).fasta$/; # such as SRR033547.fasta
 my $bac_dir = $bdirname;
-my $bac_count = (mixedseq_count - $mus_count)/3; #total 3 files for Bacterial directory
+my $bac_count = (mixedseq_count - $mus_count)/3; #total 3 files in the Bacterial directory
 my $bOUT = seqfetch($bac_count,$bac_matcher, $bac_dir, @bfiles);
 
 print "Subseq count is $mus_count and $bac_count for individual Mus chr and for bacterial files, respectively\n";
@@ -58,7 +58,7 @@ sub odir {
 ##### subroutine seqfetch: extract qualified subseq
 
 sub seqfetch {
-  # Global varibles and array 
+  # global varibles and array 
   my $gi;
   my $seq;
   my $output;
@@ -96,7 +96,7 @@ sub seqfetch {
 	my @sorted_startarray = ();
 	my @startarray = ();
         my $seq_dif = $count - $output;
-        while ($seq_dif >=1) {
+        while ($seq_dif >= 1) {
         # get random starting number
           my $seqtot = length($seq);
           my $startar = int(rand($seqtot));
