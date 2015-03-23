@@ -8,7 +8,7 @@ use warnings;
 
 # User defined total number of mixed Mus/Bacterial sequences and their ratio
 use constant mixedseq_count => 5000; 
-use constant ratio_mb => 0.8; # Mus:Bacterial = 0.8
+use constant ratio_mb => 0.8; # Mus:Bacteria = 0.8
 
 
 # get the respective Mus and Bacterial directories and output file name from command line 
