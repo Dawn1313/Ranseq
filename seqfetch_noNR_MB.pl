@@ -121,7 +121,7 @@ sub seqfetch {
         }   
     }
 
-print "$output sequences have been exported for $gi\n";
+print "$output subseq have been exported for $gi\n";
 
       close(DB); 
     } else {
