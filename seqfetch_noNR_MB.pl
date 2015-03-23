@@ -62,7 +62,6 @@ sub seqfetch {
   my $gi;
   my $seq;
   my $output;
-  my $count;
   my @startarray;
   my @sorted_startarray;
 
