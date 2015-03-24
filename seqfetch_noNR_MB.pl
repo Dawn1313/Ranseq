@@ -72,7 +72,7 @@ sub seqfetch {
     if ($file =~ /$match/) {
 	 $gi = $1;
          open(DB,  "< $dirname/$file") or die "cant open $dirname/$file for reading";
-         open(OUT, ">> $mdirname/outfile.fa") or die "cant open $mdirname/$1 for appending";
+         open(OUT, ">> $mdirname/$outfile") or die "cant open $mdirname/$1 for appending";
 
 
     my $output= 0;
