@@ -31,13 +31,13 @@ my @bfiles = odir ($bdirname);
 
 my $mus_matcher = qr/^mm_alt_Mm_Celera_(\S+).fa$/; # such as mm_alt_Mm_Celera_chr1.fa and mm_alt_Mm_Celera_unplaced.fa
 my $mus_dir = $mdirname;
-my $mus_count = int(mixedseq_count * ratio_mb/22); #total 22 files in the Mus directory
+my $mus_count = int((mixedseq_count * ratio_mb/22)+0.5); #total 22 files in the Mus directory and round a decimal number
 my $mOUT = seqfetch($mus_count,$mus_matcher, $mus_dir, @mfiles);
 
 
 my $bac_matcher = qr/^SRR(\d+).fasta$/; # such as SRR033547.fasta
 my $bac_dir = $bdirname;
-my $bac_count = (mixedseq_count - $mus_count)/3; #total 3 files in the Bacterial directory
+my $bac_count = (mixedseq_count - $mus_count*22)/3; #total 3 files in the Bacterial directory
 my $bOUT = seqfetch($bac_count,$bac_matcher, $bac_dir, @bfiles);
 
 print "Subseq count is $mus_count and $bac_count for individual Mus chr and for bacterial files, respectively\n";
@@ -108,7 +108,7 @@ sub seqfetch {
         # output the qualified subseq 
 	foreach (@sorted_startarray) {
 	  chomp ($_);
-          my $start = $_ - 1;
+          my $start = $_;
           my $length = 200; #length of subseq
 	  my $end   = $start + $length;
     	  my $outseq= substr ($seq, $start, $length);
