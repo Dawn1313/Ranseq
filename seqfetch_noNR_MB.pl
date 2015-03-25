@@ -86,7 +86,7 @@ sub odir {
 
 
 
-##### subroutine seqfetch: extract qualified subseq
+##### subroutine seqfetch: select matched sequence files and extract qualified subseq
 sub seqfetch {
   # global varibles and array 
   my $gi;
@@ -96,7 +96,7 @@ sub seqfetch {
   my @sorted_startarray;
 
 
-  # loop through the files that match the defined pattern and write the output to Mus directory  
+  # loop through the files that match the defined pattern and write the output to the current directory  
   my ($count, $match, $dirname, @files) = @_;
   foreach my $file (@files) {
     if ($file =~ /$match/) {
