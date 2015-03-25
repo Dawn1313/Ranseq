@@ -1,34 +1,65 @@
 #! /usr/bin/perl
 
-# usage: ./seqfetch_noNR_MB.pl output_file.fa
-### This is to extract mixed random subseq of two organisms with user defined total number and ratio
+# usage: ./seqfetch_noNR_MB.pl mixedseq80p.fa
+### This is to randomly select regions from a subset of sequence files under two directories for Mus and bacteria 
+### with user defined total number of sequences and Mus:bacteria ratio
 
 use strict;
 use warnings;
+use feature 'say';
+use autodie;
+use Cwd 'cwd'; #use the 'cwd()' function from the module 'Cwd'                                                                                                    
+use File::Basename qw(basename fileparse);
+use File::Path;
+use File::Spec::Functions;
+use Getopt::Long;
+use Pod::Usage;
+use Bio::SeqIO;
+
+
+my $out_dir = cwd();  # set the current working directory for the output file                                                                                      
+my $verbose = "";
+my ($help, $man_page);
+
+
+GetOptions(
+    'out_dir=s'      => \$out_dir, # required output directory                                                                                                    
+    'verbose'        => \$verbose,
+    'help'           => \$help,
+    'man'            => \$man_page,
+    'version'        => sub{ print "This is my first script at UA\n"; exit; }
+    ) or pod2usage(2);
+
+
+if ($help || $man_page) {
+    pod2usage({
+        -exitval => 0,
+        -verbose => $man_page ? 2 : 1  # verbose is 2 if $man_page and 1 if $help                                                                                 
+    });
+}
+
 
 # User defined total number of mixed Mus/Bacterial sequences and their ratio
 use constant mixedseq_count => 5000; 
 use constant ratio_mb => 0.8; # Mus:Bacteria = 0.8
 
 
-# get the respective Mus and Bacterial directories and output file name from command line 
-
+# get the Mus and Bacterial directory names for their own input files 
 my $mdirname = "/rsgrps/bhurwitz/hurwitzlab/data/reference/mouse_genome/20141111";
 my $bdirname = "/rsgrps/bhurwitz/hurwitzlab/data/reference/mouse_genome/20141111/bacteria";
 
-
+# Output file (for mixed random subseq) name from command line
 my $outfile = $ARGV[0];
 
 
+# pass the two directory names to the subroutine odir
 my @mfiles = odir ($mdirname);
 my @bfiles = odir ($bdirname);
-
 
 
 # pass the subseq count, regular expression (file name), directory, file list of Mus and Bacteria to the subroutine seqfetch
 # open all beginning with mm_alt_Mm_Celera_*.fa for the Mus directory
 # open all beginning with SRR*.fasta for the Bacterial directory
-
 my $mus_matcher = qr/^mm_alt_Mm_Celera_(\S+).fa$/; # such as mm_alt_Mm_Celera_chr1.fa and mm_alt_Mm_Celera_unplaced.fa
 my $mus_dir = $mdirname;
 my $mus_count = int((mixedseq_count * ratio_mb/22)+0.5); #total 22 files in the Mus directory and round a decimal number
@@ -40,7 +71,7 @@ my $bac_dir = $bdirname;
 my $bac_count = (mixedseq_count - $mus_count*22)/3; #total 3 files in the Bacterial directory
 my $bOUT = seqfetch($bac_count,$bac_matcher, $bac_dir, @bfiles);
 
-print "Subseq count is $mus_count and $bac_count for individual Mus chr and for bacterial files, respectively\n";
+print "Subseq count is $mus_count and $bac_count for individual Mus chr/unplaced and for bacterial sequences, respectively\n";
 
 
 
@@ -56,7 +87,6 @@ sub odir {
 
 
 ##### subroutine seqfetch: extract qualified subseq
-
 sub seqfetch {
   # global varibles and array 
   my $gi;
