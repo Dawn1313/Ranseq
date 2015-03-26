@@ -48,9 +48,9 @@ use constant ratio_mb => 0.8; # Mus:Bacteria = 0.8
 my $mdirname = "/rsgrps/bhurwitz/hurwitzlab/data/reference/mouse_genome/20141111";
 my $bdirname = "/rsgrps/bhurwitz/hurwitzlab/data/reference/mouse_genome/20141111/bacteria";
 
-# Output file (for mixed random subseq) name from command line
+# Output file (for mixed random subseq) name from command line; delete first if it existed
 my $outfile = $ARGV[0];
-
+unlink($outfile);
 
 # pass the two directory names to the subroutine odir
 my @mfiles = odir ($mdirname);
@@ -145,7 +145,7 @@ sub seqfetch {
           # disqualify the subseq with length < 200, or including 'N'
 	      next if length($outseq) < $length;
                   next if $outseq=~ /N/;  
-                      print OUT ">$gi\_$start\_$end\n", "$outseq\n";
+                      print OUT ">$gi\_$_\_$end\n", "$outseq\n";
 		      ++$output;
         }   
     }
