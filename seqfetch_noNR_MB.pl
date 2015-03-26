@@ -43,6 +43,8 @@ if ($help || $man_page) {
 use constant mixedseq_count => 5000; 
 use constant ratio_mb => 0.8; # Mus:Bacteria = 0.8
 
+# User defined subseq length
+use constant length => 200;
 
 # get the Mus and Bacterial directory names for their own input files 
 my $mdirname = "/rsgrps/bhurwitz/hurwitzlab/data/reference/mouse_genome/20141111";
@@ -139,11 +141,10 @@ sub seqfetch {
 	foreach (@sorted_startarray) {
 	  chomp ($_);
           my $start = $_;
-          my $length = 200; #length of subseq
-	  my $end   = $start + $length;
-    	  my $outseq= substr ($seq, $start, $length);
+	  my $end   = $start + length;
+    	  my $outseq= substr ($seq, $start, length);
           # disqualify the subseq with length < 200, or including 'N'
-	      next if length($outseq) < $length;
+	      next if length($outseq) < length;
                   next if $outseq=~ /N/;  
                       print OUT ">$gi\_$_\_$end\n", "$outseq\n";
 		      ++$output;
